@@ -12,19 +12,26 @@ const inputContato = useRef()
   
 
   async function getUsers(){
-   const usersFromApi = await api.get('http://localhost:3000/usuarios')
+   const usersFromApi = await api.get('/usuarios')
 
-   setUsers (usersFromApi.data)
-  }
+   setUsers(usersFromApi.data)
+  }; 
 
   async function createUsers(){
-    await api.post('http://localhost:3000/usuarios', {
+    await api.post('/usuarios', {
       name: inputName.current.value,
       email: inputEmail.current.value,
       contact: inputContato.current.value,
-    })
- 
-   }
+    });
+
+    getUsers();
+   };
+
+   async function deleteUsers(id){
+    await api.delete(`/usuarios/${id}`)
+
+    getUsers()
+   };
 
    useEffect(() => {
      getUsers();
@@ -58,11 +65,11 @@ const inputContato = useRef()
       {users.map((user) => (
         <div key={user.id}>
           <div>
-            <p>Nome: {user.nome} </p>
+            <p>Nome: {user.name} </p>
             <p>Email: {user.email}</p>
-            <p>Contato: {user.contato}</p>
+            <p>Contato: {user.contact}</p>
           </div>
-          <button>
+          <button onClick={() => deleteUsers(user.id)}>
             <input type="button"></input>
           </button>
         </div>
